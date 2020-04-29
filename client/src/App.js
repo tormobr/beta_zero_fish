@@ -11,6 +11,8 @@ const App = () => {
     const [from, setFrom] = useState(0)
     const [to, setTo] = useState(0)
 
+    const [fromSquare, setFromSquare] = useState(null)
+
     // Updates the chess board after a new move is fetched from server
     useEffect(() => {
         console.log("moving to best loc", nextMove)
@@ -69,19 +71,33 @@ const App = () => {
 
     }
 
+    // manual moving with nmouse
+    const onDrop = (e) => {
+        const move = chess.move({
+            from: e.sourceSquare,
+            to: e.targetSquare,
+            promotion: "q"
+        })
+        if (move != null){
+            setPos(chess.fen())
+        }
+    }
 
     return (
         <div className="App">
             <header className="App-header">
                 Best chess engine evah
             </header>
-
-            <Chessboard position={pos}/>
-            <button onClick={move}> Engine Move! </button>
-            <input onChange={(e) => setFrom(e.target.value)} type="text" name="from" />
-            <input onChange={(e) => setTo(e.target.value)} type="text" name="to" />
-            <button onClick={handleSubmit}> Submit </button>
-            <Positions fen={pos} changeBoard={changeBoard}/>
+            <div className="App-container">
+                <Chessboard position={pos} onDrop={onDrop}/>
+            </div>
+                <div className="App-container">
+                <button onClick={move}> Engine Move! </button>
+                <input placeholder="Move From:" onChange={(e) => setFrom(e.target.value)} type="text" name="from" />
+                <input placeholder="Move To:" onChange={(e) => setTo(e.target.value)} type="text" name="to" />
+                <button onClick={handleSubmit}> Submit </button>
+                <Positions fen={pos} changeBoard={changeBoard}/>
+            </div>
                 
         </div>
     )

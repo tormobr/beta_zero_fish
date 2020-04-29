@@ -1,8 +1,12 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 
 const Positions = ({ fen, changeBoard }) =>{
     // State vars
     const [positions, setPositions] = useState(null)
+
+    useEffect(() => {
+        loadAll()
+    }, [])
 
     // Loads all fen's from databse
     const loadAll = () => {
@@ -19,6 +23,7 @@ const Positions = ({ fen, changeBoard }) =>{
             })
     }
 
+
     // Saves current fen to the databse
     const savePos = () => {
         const body = JSON.stringify({fen: fen})
@@ -32,15 +37,14 @@ const Positions = ({ fen, changeBoard }) =>{
 
     return(
         <div>
-            <button onClick={loadAll}> Load Positions! </button>
             {positions?
                 <select onChange={e => changeBoard(e.target.value)}>
                     {positions.map(item => {
-                        return <option value={item.fen_string}> {item.fen_string} </option>
+                        return <option value={item.fen_string}> {item.name} </option>
                     })}
                 </select>
             : 
-                <h1> nothing here </h1>
+                null
             }
             <button onClick={savePos}> Save current pos to database </button>
         </div>

@@ -14,11 +14,11 @@ db = SQLAlchemy(app)
 
 # Class to represent a fen string in database
 class Fen(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), primary_key=True)
     fen_string = db.Column(db.String(100), nullable=False)
 
     def __repr__(self):
-        return str(self.id) + " , " + self.fen_string
+        return f"name: {self.name}, fen: {self.fen_string}"
 
 
 # Recieves current board settup and calculate best move
@@ -36,14 +36,14 @@ def recv_pos():
 # request all stored fen strings from database 
 @app.route('/positions', methods=["GET"])
 def get_positions():
-    ret = [{"id": f.id, "fen_string": f.fen_string} for f in Fen.query.all()]
+    ret = [{"name": f.name, "fen_string": f.fen_string} for f in Fen.query.all()]
     return flask.jsonify({"result": ret})
 
 # saves a new fen string to the databse
 @app.route('/save_pos', methods=["POST"])
 def save_pos():
     fen = request.json["fen"]
-    new_fen = Fen(id=random.randint(0, 10000000), fen_string=fen)
+    new_fen = Fen(name="Random name here" + str(random.randrange(0,100000)), fen_string=fen)
     db.session.add(new_fen)
     db.session.commit()
     return flask.jsonify({"status": "success"})
