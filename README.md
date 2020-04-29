@@ -7,6 +7,7 @@ All saved positions in the database can be requested by clicking the `load posit
 
 Enjoy
 
+![Alt text](../img/screenshot.png)
 ### TODOS
 
 - Predict more moves in the future in engine
