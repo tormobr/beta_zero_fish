@@ -10,7 +10,6 @@ const App = () => {
     const [nextMove, setNextMove] = useState("")
     const [from, setFrom] = useState(0)
     const [to, setTo] = useState(0)
-
     const [fromSquare, setFromSquare] = useState(null)
 
     // Updates the chess board after a new move is fetched from server
@@ -20,13 +19,6 @@ const App = () => {
         setPos(chess.fen())
         
     }, [nextMove])
-
-    // Handles the submit for user moves
-    const handleSubmit = () => {
-        console.log("from: ", from, "to:", to)
-        chess.move({from: from, to: to})
-        setPos(chess.fen())
-    }
 
     // Sets the board to a certain layout given by fen
     const changeBoard = (fen) => {
@@ -93,9 +85,6 @@ const App = () => {
             </div>
                 <div className="App-container">
                 <button onClick={move}> Engine Move! </button>
-                <input placeholder="Move From:" onChange={(e) => setFrom(e.target.value)} type="text" name="from" />
-                <input placeholder="Move To:" onChange={(e) => setTo(e.target.value)} type="text" name="to" />
-                <button onClick={handleSubmit}> Submit </button>
                 <Positions fen={pos} changeBoard={changeBoard}/>
             </div>
                 

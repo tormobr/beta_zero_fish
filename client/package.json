@@ -16,5 +16,5 @@
     "eject": "react-scripts eject",
     "server": "python ~/Documents/fun/test/flask/app.py"
   },
-  "proxy": "http://localhost:5000"
+  "proxy": "http://brandyberry.pythonanywhere.com"
 }

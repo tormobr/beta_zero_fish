@@ -32,6 +32,11 @@ const Positions = ({ fen, changeBoard }) =>{
         loadAll()
     }
 
+    const handleDelete = () => {
+        fetch("/delete_all")
+        loadAll()
+    }
+
     // Saves current fen to the databse
     const savePos = (name) => {
         const body = JSON.stringify({name: name, fen: fen})
@@ -56,6 +61,7 @@ const Positions = ({ fen, changeBoard }) =>{
                 null
             }
             <button onClick={e => setShowModal(!showModal)}> Save current pos to database </button>
+            <button onClick={handleDelete}> Delete All Saved Pos </button>
             {showModal?
                 <SaveModal handleSubmit={handleSubmit}/>
             :

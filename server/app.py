@@ -39,14 +39,23 @@ def get_positions():
     ret = [{"name": f.name, "fen_string": f.fen_string} for f in Fen.query.all()]
     return flask.jsonify({"result": ret})
 
+# Deletes all positions from databse
+@app.route('/delete_all', methods=["GET"])
+def delete_all():
+    for f in Fen.query.all():
+        db.session.delete(f)
+    db.session.commit()
+    return flask.jsonify({"result": "success"})
+
 # saves a new fen string to the databse
 @app.route('/save_pos', methods=["POST"])
 def save_pos():
     fen = request.json["fen"]
     name = request.json["name"]
     new_fen = Fen(name=name, fen_string=fen)
-    #if Fen.query.filter_by(name=name):
-        #return flask.jsonify({"status": "failed"})
+    if Fen.query.filter_by(name=name).all():
+        print("already saved name in databse")
+        return flask.jsonify({"status": "failed"})
     db.session.add(new_fen)
     db.session.commit()
     return flask.jsonify({"status": "success"})

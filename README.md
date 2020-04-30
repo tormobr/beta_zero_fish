@@ -5,6 +5,11 @@ If you end up with a interesting position and don't want to forget it, make sure
 
 All saved positions in the database can be requested by clicking the `load positions`. The board will then fetch all the saved positions and you can load them into the board with a simple click.
 
+
+## Setup
+To run the client execute `npm start` in the client folder.
+The server could either be ran localy with `python app.py` in the server folder, or by setting the proxy in `package.json` to `http://brandyberry.pythonanywhere.com` (should be the default setting)  where the server is running all the time. This server might be outdated though.
+
 Enjoy
 
 ![Alt text](./img/screenshot.png)
