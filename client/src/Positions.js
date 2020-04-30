@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react"
+import SaveModal from "./SaveModal"
 
 const Positions = ({ fen, changeBoard }) =>{
     // State vars
     const [positions, setPositions] = useState(null)
+    const [showModal, setShowModal] = useState(false)
 
     useEffect(() => {
         loadAll()
@@ -23,6 +25,12 @@ const Positions = ({ fen, changeBoard }) =>{
             })
     }
 
+
+    const handleSubmit = (name) => {
+        savePos()
+        setShowModal(!showModal)
+        loadAll()
+    }
 
     // Saves current fen to the databse
     const savePos = () => {
@@ -46,7 +54,12 @@ const Positions = ({ fen, changeBoard }) =>{
             : 
                 null
             }
-            <button onClick={savePos}> Save current pos to database </button>
+            <button onClick={e => setShowModal(!showModal)}> Save current pos to database </button>
+            {showModal?
+                <SaveModal handleSubmit={handleSubmit}/>
+            :
+                null
+            }
         </div>
     )
 }
