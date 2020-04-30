@@ -27,20 +27,21 @@ const Positions = ({ fen, changeBoard }) =>{
 
 
     const handleSubmit = (name) => {
-        savePos()
+        savePos(name)
         setShowModal(!showModal)
         loadAll()
     }
 
     // Saves current fen to the databse
-    const savePos = () => {
-        const body = JSON.stringify({fen: fen})
+    const savePos = (name) => {
+        const body = JSON.stringify({name: name, fen: fen})
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: body
         }
         fetch("/save_pos", requestOptions)
+        .then(response => {console.log(response)})
     }
 
     return(

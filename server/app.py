@@ -43,7 +43,10 @@ def get_positions():
 @app.route('/save_pos', methods=["POST"])
 def save_pos():
     fen = request.json["fen"]
-    new_fen = Fen(name="Random name here" + str(random.randrange(0,100000)), fen_string=fen)
+    name = request.json["name"]
+    new_fen = Fen(name=name, fen_string=fen)
+    #if Fen.query.filter_by(name=name):
+        #return flask.jsonify({"status": "failed"})
     db.session.add(new_fen)
     db.session.commit()
     return flask.jsonify({"status": "success"})
