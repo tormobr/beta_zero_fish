@@ -11,19 +11,28 @@ const App = () => {
     const [from, setFrom] = useState(0)
     const [to, setTo] = useState(0)
     const [fromSquare, setFromSquare] = useState(null)
+    const [orientation, setOrientation] = useState("white")
+    const [autoFlip, setAutoFlip] = useState(false)
 
     // Updates the chess board after a new move is fetched from server
     useEffect(() => {
         console.log("moving to best loc", nextMove)
         chess.move(nextMove.move)
-        setPos(chess.fen())
-        
+        afterMove()
     }, [nextMove])
 
     // Sets the board to a certain layout given by fen
     const changeBoard = (fen) => {
         chess.load(fen)
         setPos(chess.fen())
+    }
+
+    const afterMove = () =>{
+        setPos(chess.fen())
+        if (autoFlip) {
+            flipBoard()
+        }
+
     }
     
     // Fetches the best move from server based on current fen
@@ -38,8 +47,6 @@ const App = () => {
         fetch("/hax", requestOptions)
             .then(response => response.json())
             .then(data => {
-                console.log("response: ", data)
-
                 console.log(data.best)
                 setNextMove({turn: turn, move: data.best})
             })
@@ -47,8 +54,7 @@ const App = () => {
     }
     
     // Makes a new move on the chess board
-    const move = async () => {
-        console.log("moving now")
+    const move = () => {
 
         const possibleMoves = chess.moves({verbose: true});
         const fen = chess.fen()
@@ -64,14 +70,29 @@ const App = () => {
     }
 
     // manual moving with nmouse
-    const onDrop = (e) => {
+    const makeMove = (sourceSquare, targetSquare) => {
         const move = chess.move({
-            from: e.sourceSquare,
-            to: e.targetSquare,
+            from: sourceSquare,
+            to: targetSquare,
             promotion: "q"
         })
         if (move != null){
-            setPos(chess.fen())
+            afterMove()
+        }
+    }
+
+    // Undo the last move
+    const undoMove = () => {
+        const undo = chess.undo()
+        setPos(chess.fen())
+    }
+    
+    const flipBoard = () => {
+        if (orientation == "white"){
+            setOrientation("black")
+        }
+        else{
+            setOrientation("white")
         }
     }
 
@@ -81,10 +102,25 @@ const App = () => {
                 Best chess engine evah
             </header>
             <div className="App-container">
-                <Chessboard position={pos} onDrop={onDrop}/>
+                <Chessboard 
+                    position={pos} 
+                    orientation={orientation}
+                    onDrop={e => makeMove(e.sourceSquare, e.targetSquare)}
+                    />
             </div>
                 <div className="App-container">
                 <button onClick={move}> Engine Move! </button>
+
+                <button onClick={undoMove}> 
+                    Go Back!
+                </button>
+                <button onClick={flipBoard}> 
+                    Flip Board
+                </button>
+                <button onClick={() => setAutoFlip(!autoFlip)}> 
+                    Toggle AutoFlip
+                </button>
+
                 <Positions fen={pos} changeBoard={changeBoard}/>
             </div>
                 

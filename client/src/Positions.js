@@ -46,7 +46,6 @@ const Positions = ({ fen, changeBoard }) =>{
             body: body
         }
         fetch("/save_pos", requestOptions)
-        .then(response => {console.log(response)})
     }
 
     return(
@@ -61,9 +60,15 @@ const Positions = ({ fen, changeBoard }) =>{
                 null
             }
             <button onClick={e => setShowModal(!showModal)}> Save current pos to database </button>
-            <button onClick={handleDelete}> Delete All Saved Pos </button>
+            <button onClick={handleDelete} > 
+                Delete All Saved Pos 
+            </button>
+
             {showModal?
-                <SaveModal handleSubmit={handleSubmit}/>
+                <SaveModal 
+                    handleSubmit={handleSubmit}
+                    handleClose={() => setShowModal(false)}
+                />
             :
                 null
             }
