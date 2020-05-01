@@ -22,3 +22,4 @@ Enjoy
 - Certain king moves are buggy
 - Make better database keys and rows
 - Save games in database? openings mby?
+- Get rid of all the messy buttons
