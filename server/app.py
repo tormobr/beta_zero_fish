@@ -6,6 +6,7 @@ from flask import Flask
 from moves import *
 from board import Board
 from flask_sqlalchemy import SQLAlchemy
+import chess
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///app.db"
@@ -26,11 +27,13 @@ class Fen(db.Model):
 def recv_pos():
     moves = request.json["moves"]
     turn = request.json["turn"]
-    fen = request.json["fen"].split()[0]
-    board = Board(fen)
+    fen = request.json["fen"]
+    board = chess.Board(fen)
+    print(board)
+    print(board.board_fen, fen)
     index = 0 
     best = get_best_move(moves, turn, board)
-    print(board)
+    print(best)
     return flask.jsonify(best)
 
 # request all stored fen strings from database 
@@ -61,4 +64,4 @@ def save_pos():
     return flask.jsonify({"status": "success"})
 
 if __name__ == "__main__":
-    app.run(host="localhost", port="5000", debug=False)
+    app.run(host="localhost", port="5000", debug=True)

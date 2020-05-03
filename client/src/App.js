@@ -17,7 +17,7 @@ const App = () => {
     // Updates the chess board after a new move is fetched from server
     useEffect(() => {
         console.log("moving to best loc", nextMove)
-        chess.move(nextMove.move)
+        makeMove(nextMove.from, nextMove.to)
         afterMove()
     }, [nextMove])
 
@@ -34,9 +34,9 @@ const App = () => {
         }
 
     }
-    
+
     // Fetches the best move from server based on current fen
-    const getBestMove = (moves, turn, fen) => {
+    const getBestMove = async (moves, turn, fen) => {
         const body = JSON.stringify({ moves: moves, turn: turn, fen:fen})
         console.log(moves)
         const requestOptions = {
@@ -48,13 +48,13 @@ const App = () => {
             .then(response => response.json())
             .then(data => {
                 console.log(data.best)
-                setNextMove({turn: turn, move: data.best})
+                setNextMove(data.best)
             })
 
     }
     
     // Makes a new move on the chess board
-    const move = () => {
+    const move = async () => {
 
         const possibleMoves = chess.moves({verbose: true});
         const fen = chess.fen()
@@ -65,7 +65,7 @@ const App = () => {
                 alert("game over")
                 return
         }
-        getBestMove(possibleMoves, chess.turn(), fen)
+        await getBestMove(possibleMoves, chess.turn(), fen)
 
     }
 
@@ -83,11 +83,18 @@ const App = () => {
 
     // Undo the last move
     const undoMove = () => {
-        const undo = chess.undo()
+        console.log("undo happens here")
+        chess.undo()
         setPos(chess.fen())
     }
+
     
     const flipBoard = () => {
+        if (autoFlip){
+            chess.turn() == "w"? setOrientation("White") : setOrientation("black")
+            return
+        }
+
         if (orientation == "white"){
             setOrientation("black")
         }
@@ -103,12 +110,15 @@ const App = () => {
             </header>
             <div className="App-container">
                 <Chessboard 
-                    position={pos} 
+                    key={chess.fen()}
+                    position={chess.fen()} 
+                    transitionDuration="0"
                     orientation={orientation}
                     onDrop={e => makeMove(e.sourceSquare, e.targetSquare)}
                     />
             </div>
-                <div className="App-container">
+
+            <div className="App-container">
                 <button onClick={move}> Engine Move! </button>
 
                 <button onClick={undoMove}> 
