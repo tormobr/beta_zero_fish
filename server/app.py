@@ -28,11 +28,8 @@ def recv_pos():
     moves = request.json["moves"]
     turn = request.json["turn"]
     fen = request.json["fen"]
-    board = chess.Board(fen)
-    print(board)
-    print(board.board_fen, fen)
     index = 0 
-    best = get_best_move(moves, turn, board)
+    best = get_best_move(moves, turn, fen)
     print(best)
     return flask.jsonify(best)
 
