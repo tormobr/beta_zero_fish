@@ -1,3 +1,4 @@
+import multipliers
 import time
 from copy import deepcopy
 import random
@@ -8,7 +9,7 @@ def get_best_move(moves, turn, fen):
     game = chess.Board(fen)
     board = Board(fen.split()[0])
     new_game = deepcopy(game)
-    best = rec(board, game, 4, turn, 4, -10000, 10000)[1]
+    best = rec(board, game, 3, turn, 3, -10000, 10000)[1]
 
     ret = {"best": {"from": best.uci()[:2], "to": best.uci()[2:]}}
     print(ret)
@@ -43,10 +44,15 @@ def rec(board, game, depth, turn, og_depth, alpha, beta):
                 break
 
     if turn == "b":
-        s = min(scores, key=lambda x:x[0])
+        if not scores:
+            s = 1000
+        else:
+            s = min(scores, key=lambda x:x[0])
     else:
-        s = max(scores, key=lambda x:x[0])
-    print(turn, s)
+        if not scores:
+            s = -1000
+        else:
+            s = max(scores, key=lambda x:x[0])
     if depth != og_depth:
         s = s[0] 
     return s
@@ -57,9 +63,9 @@ def rec(board, game, depth, turn, og_depth, alpha, beta):
 
 def get_board_score(game, board):
     score = 0
-    for row in board.grid:
-        for elem in row:
-            score += elem 
+    for i, row in enumerate(board.grid):
+        for j, elem in enumerate(row):
+            score += elem
     return score
 
 
